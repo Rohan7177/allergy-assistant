@@ -27,9 +27,21 @@ export default async function handler(req, res) {
 
     // Poll for completion
     let runStatus;
+    //new code
+    const pollInterval = 1000; // Wait 1 second between polls
+    const maxWaitTime = 20000; // Maximum wait time of 10 seconds
+    const startTime = Date.now();
+    //new code
     do {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second
+      //await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second
+      await new Promise((resolve) => setTimeout(resolve, pollInterval)); // Wait poll interval
       runStatus = await openai.beta.threads.runs.retrieve(threadId, run.id);
+
+      // new code If the wait time exceeds the max, return a timeout error
+            if (Date.now() - startTime > maxWaitTime) {
+              return res.status(504).json({ error: "Assistant response timed out." });
+            }
+
     } while (runStatus.status !== "completed");
 
     // Get assistant messages
