@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-r from-green-200 to-blue-300 p-4">
+    <div className="flex flex-col min-h-screen bg-gradient-to-r from-green-200 to-blue-300 p-4">
       <div className="flex-1 overflow-y-auto mb-4 p-4 bg-white rounded-lg shadow-md">
         {messages.map((msg, index) => (
           <div key={index} className={`p-2 my-2 ${msg.role === "user" ? "text-right" : "text-left"}`}>
