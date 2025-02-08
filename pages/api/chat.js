@@ -22,7 +22,8 @@ export default async function handler(req, res) {
 
     // Run the assistant
     const run = await openai.beta.threads.runs.create(threadId, {
-      assistant_id: "asst_SUyfOxIhdZTF3hfcl7StTfWI",
+      //assistant_id: "asst_SUyfOxIhdZTF3hfcl7StTfWI",
+      assistant_id: "asst_t8CTDyDOzZDkBH7Pgv5LyBSt",
     });
 
     // Poll for completion
