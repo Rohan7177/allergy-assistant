@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import { useState, useEffect, useRef } from "react";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
@@ -10,12 +10,12 @@ export default function Home() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, loading]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    // Save the current message in a local variable
+    // Store the current input value to ensure it's sent correctly
     const currentMessage = input;
     const userMessage = { role: "user", content: currentMessage };
     setMessages((prev) => [...prev, userMessage]);
@@ -43,27 +43,50 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-gradient-to-r from-green-200 to-blue-300 p-4">
       <div className="flex-1 overflow-y-auto mb-4 p-4 bg-white rounded-lg shadow-md">
         {messages.map((msg, index) => (
-          <div key={index} className={`p-2 my-2 ${msg.role === "user" ? "text-right" : "text-left"}`}>
-            <div
-              className={`inline-block px-4 py-2 rounded-lg whitespace-pre-wrap ${
-                msg.role === "user" ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-900"
-              }`}
-            >
-              <ReactMarkdown>{msg.content}</ReactMarkdown>
-            </div>
+          <div
+            key={index}
+            className={`p-2 my-2 ${
+              msg.role === "user" ? "text-right" : "text-left"
+            }`}
+          >
+            {msg.role === "assistant" ? (
+              <div className="flex items-start">
+                <img
+                  src="img/cheficon.jpeg"
+                  alt="Assistant Avatar"
+                  className="w-8 h-8 rounded-full mr-2"
+                />
+                <div className="inline-block px-4 py-2 rounded-lg whitespace-pre-wrap bg-gray-200 text-gray-900">
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                </div>
+              </div>
+            ) : (
+              <div className="inline-block px-4 py-2 rounded-lg whitespace-pre-wrap bg-blue-500 text-white">
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
+              </div>
+            )}
           </div>
         ))}
+
         {/* Loading indicator in chat area for assistant response */}
         {loading && (
           <div className="p-2 my-2 text-left">
-            <div className="inline-block px-4 py-2 rounded-lg whitespace-pre-wrap bg-gray-200 text-gray-900">
-              <div className="flex items-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500 mr-2"></div>
-                <span>Protecting you from allergens! ...</span>
+            <div className="flex items-center">
+              <img
+                src="img/cheficon.jpeg"
+                alt="Assistant Avatar"
+                className="w-8 h-8 rounded-full mr-2"
+              />
+              <div className="inline-block px-4 py-2 rounded-lg whitespace-pre-wrap bg-gray-200 text-gray-900">
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500 mr-2"></div>
+                  <span>Protecting you from allergens! ...</span>
+                </div>
               </div>
             </div>
           </div>
         )}
+
         <div ref={messagesEndRef} />
       </div>
 
